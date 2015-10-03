@@ -46,6 +46,7 @@
                         <a href="#" class="btn btn-primary">儲存</a>
                         <a href="#" class="btn btn-default" id="btnPreviousPost">上一筆</a>
                         <a href="#" class="btn btn-default" id="btnNextPost">下一筆</a>
+                        <a href="#" class="btn btn-default" id="btnNextPage">取得另外十筆</a>
                     </div>
                     <div class="clearfix"></div>
                     <div class="list-group" id="relative_location">
@@ -148,7 +149,6 @@
                     },
                     dataType: 'json',
                     success: function (data) {
-                        offset += data.count;
                         currentResult = data.results;
                         workingIndex = 0;
                         //console.info(data);
@@ -226,6 +226,11 @@
                         workingIndex = 0;
                     }
                     getNextPost();
+                    return false;
+                });
+                $('#btnNextPage').click(function() {
+                    offset += 10;
+                    getNextPage();
                     return false;
                 });
             })
