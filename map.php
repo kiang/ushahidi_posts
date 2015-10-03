@@ -42,6 +42,11 @@
                         <div>title: <span id="postTitle"></span></div>
                         <div>content: <span id="postContent"></span></div>
                     </div>
+                    <div clas="btn-group">
+                        <a href="#" class="btn btn-primary">儲存</a>
+                        <a href="#" class="btn btn-default" id="btnPreviousPost">上一筆</a>
+                        <a href="#" class="btn btn-default" id="btnNextPost">下一筆</a>
+                    </div>
                     <div class="clearfix"></div>
                     <div class="list-group" id="relative_location">
                         <a class="list-group-item" data-sn="0">
@@ -81,6 +86,9 @@
             </div><!-- row -->
         </div><!-- container -->
 
+        <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?callback=initMap"
+        async defer></script>
         <script>
             var markers = [];
             var token = '';
@@ -98,6 +106,8 @@
 
 // Removes the markers from the map, but keeps them in the array.
             function clearMarkers() {
+                $('#latitude').val('');
+                $('#longtitude').val('');
                 setMapOnAll(null);
             }
 
@@ -148,6 +158,7 @@
             }
 
             function getNextPost() {
+                clearMarkers();
                 var elementLat = $('#latitude');
                 var elementLng = $('#longtitude');
                 $('#postTitle').html(currentResult[workingIndex].title);
@@ -199,10 +210,26 @@
                 });
             }
 
+            $(function () {
+                $('#btnNextPost').click(function () {
+                    var maxIndex = currentResult.length - 1;
+                    workingIndex += 1;
+                    if (workingIndex > maxIndex) {
+                        workingIndex = maxIndex;
+                    }
+                    getNextPost();
+                    return false;
+                });
+                $('#btnPreviousPost').click(function () {
+                    workingIndex -= 1;
+                    if (workingIndex < 0) {
+                        workingIndex = 0;
+                    }
+                    getNextPost();
+                    return false;
+                });
+            })
+
         </script>
-        <script src="http://code.jquery.com/jquery-2.1.4.min.js">
-        </script>
-        <script src="https://maps.googleapis.com/maps/api/js?callback=initMap"
-        async defer></script>
     </body>
 </html>
