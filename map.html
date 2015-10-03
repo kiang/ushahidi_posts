@@ -10,9 +10,26 @@
                 height: 100%;
                 margin: 0;
                 padding: 0;
+
+            }
+            .map_wrap{
+                position: relative;
             }
             #map {
-                height: 500px;
+                height: 600px;
+            }
+            #map_box{
+                position: absolute;
+                right:80px;
+                bottom:20px;
+                left:80px;
+                height: auto;
+                max-height:300px;
+                /*width:300px;*/
+                background: rgba(255,255,255,.95);
+                padding:10px;
+                border-radius: 4px;
+                box-shadow: 0 0 5px #aaa;
             }
             .item_control{
                 text-align: right;
@@ -21,68 +38,84 @@
             .item_control span{
                 margin-left:6px;
             }
+            h4{
+                /*overflow: auto;*/
+                color:#2e6da4;
+                /*line-height: 1.5;*/
+            }
+            .content{
+                overflow: auto;
+                color:#666;
+            }
+            #loading{
+                left:0;
+                top:0;
+                bottom:0;
+                right:0;
+                position: fixed;
+                background: url(http://www.wingzero.tw/admin/loading.gif) rgba(255,255,255,.8) center center no-repeat;
+                /*display: none;*/
+                z-index: 999;
+            }
+            .chg_btns{
+                padding-bottom:10px;
+            }
+            #relatedPosts{
+                height:380px;
+                overflow: auto;
+            }
         </style>
     </head>
     <body>
+        <div id="loading"></div>
         <div class="container">
             <div class="row">
                 <h1>所有資料</h1>
-                <div class="col-md-8">
+                <div class="col-md-8" class="map_wrap">
                     <div id="map"></div>
+                    <div id="map_box">
+                        <div class="content"><!-- title:  --><h4 id="postTitle"></h4>
+                            <div id="postContent" class=""></div></div>
+                        </form>
+
+                        <div class="clearfix"></div>
+                    </div>
                 </div><!-- col-md-8 -->
                 <div class="col-md-4">
-                    <div class="col-md-12">
-                        <input id="address" type="textbox" value="">
-                        <input id="submit" type="button" value="搜尋">
+                    <form class="form-inline">
+                        <div class="form-group">
+                            <input id="address" type="textbox" class="form-control" value="">
+                        </div>
+                        <a id="submit" role="button" value="" class="btn btn-primary">搜尋</a>
                         <hr />
-                        <br />經度：<input id="longtitude" type="textbox" value="">
-                        <br />緯度：<input id="latitude" type="textbox" value="">
-                    </div>
-                    <div class="col-md-12">
-                        <div>title: <span id="postTitle"></span></div>
-                        <div>content: <span id="postContent"></span></div>
-                    </div>
-                    <div clas="btn-group">
-                        <a href="#" class="btn btn-primary" id="btnSavePost">儲存</a>
-                        <a href="#" class="btn btn-default" id="btnPreviousPost">上一筆</a>
-                        <a href="#" class="btn btn-default" id="btnNextPost">下一筆</a>
-                        <a href="#" class="btn btn-default" id="btnNextPage">取得另外十筆</a>
-                    </div>
-                    <div class="clearfix"></div>
-                    <div class="list-group" id="relative_location">
-                        <a class="list-group-item" data-sn="0">
-                            <h4 class="list-group-item-heading">台南市政府_0</h4>
-                            <p class="list-group-item-text">台南行政中心</p>
-                            <div class="item_control">
-                                <span data-toggle="tooltip" data-placement="top" title="合併" class="glyphicon glyphicon-pushpin btn btn-primary"></span>
-                                <span data-toggle="tooltip" data-placement="top" title="刪除" class="glyphicon glyphicon-trash btn btn-danger"></span>
+
+                    </form>
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label for="longtitude" class="col-sm-2 control-label">經度</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="longtitude" placeholder="經度">
                             </div>
-                        </a>
-                        <a class="list-group-item" data-sn="0">
-                            <h4 class="list-group-item-heading">台南市政府_0</h4>
-                            <p class="list-group-item-text">台南行政中心</p>
-                            <div class="item_control">
-                                <span data-toggle="tooltip" data-placement="top" title="合併" class="glyphicon glyphicon-pushpin btn btn-primary"></span>
-                                <span data-toggle="tooltip" data-placement="top" title="刪除" class="glyphicon glyphicon-trash btn btn-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="latitude" class="col-sm-2 control-label">經度</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="latitude" placeholder="經度">
                             </div>
-                        </a>
-                        <a class="list-group-item" data-sn="0">
-                            <h4 class="list-group-item-heading">台南市政府_0</h4>
-                            <p class="list-group-item-text">台南行政中心</p>
-                            <div class="item_control">
-                                <span data-toggle="tooltip" data-placement="top" title="合併" class="glyphicon glyphicon-pushpin btn btn-primary"></span>
-                                <span data-toggle="tooltip" data-placement="top" title="刪除" class="glyphicon glyphicon-trash btn btn-danger"></span>
-                            </div>
-                        </a>
-                        <a class="list-group-item" data-sn="0">
-                            <h4 class="list-group-item-heading">台南市政府_0</h4>
-                            <p class="list-group-item-text">台南行政中心</p>
-                            <div class="item_control">
-                                <span data-toggle="tooltip" data-placement="top" title="合併" class="glyphicon glyphicon-pushpin btn btn-primary"></span>
-                                <span data-toggle="tooltip" data-placement="top" title="刪除" class="glyphicon glyphicon-trash btn btn-danger"></span>
-                            </div>
-                        </a>
-                    </div>
+                        </div>
+                        <div class="btn-group chg_btns btn-group-justified">
+                            <a href="#" class="btn btn-primary">儲存</a>
+                            <a href="#" class="btn btn-default" id="btnPreviousPost">上一筆</a>
+                            <a href="#" class="btn btn-default" id="btnNextPost">下一筆</a>
+                            <a href="#" class="btn btn-default" id="btnNextPage">另外十筆</a>
+                        </div>
+                        <!--  <br />經度：<input id="longtitude" type="textbox" value=""> -->
+                        <!-- <br />緯度：<input id="latitude" type="textbox" value=""> -->
+                        <div class="list-group" id="relatedPosts">
+
+                        </div><!-- map_box -->
+
+
                 </div><!-- col-md-4 -->
             </div><!-- row -->
         </div><!-- container -->
@@ -140,6 +173,7 @@
             }
 
             function getNextPage() {
+                $("#loading").fadeIn();
                 $.ajax({
                     url: 'http://ushahidi.olc.tw/api/api/v3/posts?orderby=created&order=desc&limit=10&offset=' + offset,
                     type: 'get',
@@ -151,8 +185,11 @@
                     success: function (data) {
                         currentResult = data.results;
                         workingIndex = 0;
-                        console.info(data);
+                        //console.info(data);
                         getNextPost();
+                    },
+                    complete: function () {
+                        $("#loading").fadeOut();
                     }
                 });
             }
@@ -188,6 +225,7 @@
                 var elementLng = $('#longtitude');
                 $('#postTitle').html(currentResult[workingIndex].title);
                 $('#postContent').html(currentResult[workingIndex].content);
+                $('div#relatedPosts').html('');
                 if (currentResult[workingIndex].values.location_default && currentResult[workingIndex].values.location_default[0]) {
                     var p = {lat: currentResult[workingIndex].values.location_default[0].lat, lng: currentResult[workingIndex].values.location_default[0].lon};
                     map.setCenter(p);
@@ -204,7 +242,37 @@
                     elementLng.val(currentResult[workingIndex].values.location_default[0].lon);
                     elementLat.val(currentResult[workingIndex].values.location_default[0].lat);
                     markers.push(marker);
+                    getRelatedPosts();
                 }
+            }
+
+            function getRelatedPosts() {
+                var bounds = map.getBounds();
+                var bbox = [bounds.getSouthWest().lng(), bounds.getNorthEast().lat(), bounds.getNorthEast().lng(), bounds.getSouthWest().lat()];
+                $.ajax({
+                    url: 'http://ushahidi.olc.tw/api/api/v3/posts?orderby=created&order=desc&limit=10&bbox=' + bbox.join(','),
+                    type: 'get',
+                    data: {},
+                    headers: {
+                        Authorization: 'Bearer ' + token
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        var listHtml = '';
+                        if (data.count > 0) {
+                            $.each(data.results, function () {
+                                listHtml += '<a class="list-group-item" data-sn="0">' +
+                                        '<h4 class="list-group-item-heading">' + this.title + '</h4>' +
+                                        '<p class="list-group-item-text">' + this.content + '</p>' +
+                                        '<div class="item_control">' +
+                                        '<span data-toggle="tooltip" data-placement="top" title="合併" class="glyphicon glyphicon-pushpin btn btn-primary"></span>' +
+                                        '</div>' +
+                                        '</a>';
+                            });
+                        }
+                        $('div#relatedPosts').html(listHtml);
+                    }
+                });
             }
 
             function geocodeAddress(geocoder, resultsMap) {
