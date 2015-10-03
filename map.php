@@ -37,7 +37,10 @@
                         <hr />
                         <br />經度：<input id="longtitude" type="textbox" value="">
                         <br />緯度：<input id="latitude" type="textbox" value="">
-
+                    </div>
+                    <div class="col-md-12">
+                        <div>title: <span id="postTitle"></span></div>
+                        <div>content: <span id="postContent"></span></div>
                     </div>
                     <div class="clearfix"></div>
                     <div class="list-group" id="relative_location">
@@ -80,6 +83,11 @@
 
         <script>
             var markers = [];
+            var token = '';
+            var offset = 0;
+            var currentResult = [];
+            var workingIndex = 0;
+            var map;
 
             // Sets the map on all markers in the array.
             function setMapOnAll(map) {
@@ -95,15 +103,72 @@
 
 
             function initMap() {
-                var map = new google.maps.Map(document.getElementById('map'), {
+                map = new google.maps.Map(document.getElementById('map'), {
                     zoom: 8,
-                    center: {lat: -34.397, lng: 150.644}
+                    center: {lat: 22.9998999, lng: 120.2268758}
                 });
                 var geocoder = new google.maps.Geocoder();
 
-                document.getElementById('submit').addEventListener('click', function () {
+                $('#submit').click(function () {
                     geocodeAddress(geocoder, map);
                 });
+
+                $.post('http://ushahidi.olc.tw/api/oauth/token', {
+                    grant_type: 'client_credentials',
+                    client_id: 'ushahidiui',
+                    client_secret: '35e7f0bca957836d05ca0492211b0ac707671261',
+                    scope: 'posts api'
+                }, function (d) {
+                    if (d.access_token) {
+                        token = d.access_token;
+                        getNextPage();
+                    } else {
+                        alert('can not get token');
+                    }
+                });
+            }
+
+            function getNextPage() {
+                $.ajax({
+                    url: 'http://ushahidi.olc.tw/api/api/v3/posts?orderby=created&order=desc&limit=10&offset=' + offset,
+                    type: 'get',
+                    data: {},
+                    headers: {
+                        Authorization: 'Bearer ' + token
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        offset += data.count;
+                        currentResult = data.results;
+                        workingIndex = 0;
+                        //console.info(data);
+                        getNextPost();
+                    }
+                });
+            }
+
+            function getNextPost() {
+                var elementLat = $('#latitude');
+                var elementLng = $('#longtitude');
+                $('#postTitle').html(currentResult[workingIndex].title);
+                $('#postContent').html(currentResult[workingIndex].content);
+                if (currentResult[workingIndex].values.location_default && currentResult[workingIndex].values.location_default[0]) {
+                    var p = {lat: currentResult[workingIndex].values.location_default[0].lat, lng: currentResult[workingIndex].values.location_default[0].lon};
+                    map.setCenter(p);
+                    map.setZoom(17);
+                    var marker = new google.maps.Marker({
+                        map: map,
+                        position: p,
+                        draggable: true
+                    });
+                    google.maps.event.addListener(marker, 'dragend', function (e) {
+                        elementLat.val(e.latLng.lat());
+                        elementLng.val(e.latLng.lng());
+                    });
+                    elementLng.val(currentResult[workingIndex].values.location_default[0].lon);
+                    elementLat.val(currentResult[workingIndex].values.location_default[0].lat);
+                    markers.push(marker);
+                }
             }
 
             function geocodeAddress(geocoder, resultsMap) {
