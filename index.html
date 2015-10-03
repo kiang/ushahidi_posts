@@ -31,13 +31,6 @@
                 border-radius: 4px;
                 box-shadow: 0 0 5px #aaa;
             }
-            .item_control{
-                text-align: right;
-                padding:6px 0 0;
-            }
-            .item_control span{
-                margin-left:6px;
-            }
             h4{
                 /*overflow: auto;*/
                 color:#2e6da4;
@@ -128,6 +121,7 @@
             var token = '';
             var offset = 0;
             var currentResult = [];
+            var relatedId = 0;
             var workingIndex = 0;
             var map;
 
@@ -196,7 +190,9 @@
 
             function saveCurrentPost() {
                 $("#loading").fadeIn();
+                relatedId = parseInt(relatedId);
                 var toSave = {
+                    'related-post': [relatedId],
                     location_default: [
                         {
                             lon: Number.parseFloat($('#longtitude').val()),
@@ -230,6 +226,12 @@
                 $('#postTitle').html(currentResult[workingIndex].title);
                 $('#postContent').html(currentResult[workingIndex].content);
                 $('div#relatedPosts').html('');
+                if (currentResult[workingIndex].values['related-post'] && currentResult[workingIndex].values['related-post'][0]) {
+                    relatedId = currentResult[workingIndex].values['related-post'][0];
+                } else {
+                    relatedId = 0;
+                }
+
                 if (currentResult[workingIndex].values.location_default && currentResult[workingIndex].values.location_default[0]) {
                     var p = {lat: currentResult[workingIndex].values.location_default[0].lat, lng: currentResult[workingIndex].values.location_default[0].lon};
                     map.setCenter(p);
@@ -263,18 +265,34 @@
                     dataType: 'json',
                     success: function (data) {
                         var listHtml = '';
-                        if (data.count > 0) {
+                        if (data.count > 1) {
                             $.each(data.results, function () {
-                                listHtml += '<a class="list-group-item" data-sn="0">' +
-                                        '<h4 class="list-group-item-heading">' + this.title + '</h4>' +
-                                        '<p class="list-group-item-text">' + this.content + '</p>' +
-                                        '<div class="item_control">' +
-                                        '<span data-toggle="tooltip" data-placement="top" title="合併" class="glyphicon glyphicon-pushpin btn btn-primary"></span>' +
-                                        '</div>' +
-                                        '</a>';
+                                if (currentResult[workingIndex].id != this.id) {
+                                    listHtml += '<div class="list-group-item">' +
+                                            '<h4 class="list-group-item-heading">' + this.title + '</h4>' +
+                                            '<p class="list-group-item-text">' + this.content + '</p>';
+                                    if (relatedId == this.id) {
+                                        listHtml += '<a data-id="' + this.id + '" class="glyphicon glyphicon-link btn btn-primary pull-right"></a>';
+                                    } else {
+                                        listHtml += '<a data-id="' + this.id + '" class="glyphicon glyphicon-pushpin btn btn-primary pull-right"></a>';
+                                    }
+                                    listHtml += '<div class="clearfix"></div>' +
+                                            '</div>';
+                                }
                             });
                         }
                         $('div#relatedPosts').html(listHtml);
+                        $('a.glyphicon').click(function () {
+                            if ($(this).hasClass('glyphicon-link')) {
+                                $(this).addClass('glyphicon-pushpin').removeClass('glyphicon-link');
+                                relatedId = 0;
+                            } else {
+                                $('a.glyphicon-link').addClass('glyphicon-pushpin').removeClass('glyphicon-link');
+                                $(this).removeClass('glyphicon-pushpin').addClass('glyphicon-link');
+                                relatedId = $(this).attr('data-id');
+                            }
+                            return false;
+                        });
                     }
                 });
             }
