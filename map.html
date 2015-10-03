@@ -43,7 +43,7 @@
                         <div>content: <span id="postContent"></span></div>
                     </div>
                     <div clas="btn-group">
-                        <a href="#" class="btn btn-primary">儲存</a>
+                        <a href="#" class="btn btn-primary" id="btnSavePost">儲存</a>
                         <a href="#" class="btn btn-default" id="btnPreviousPost">上一筆</a>
                         <a href="#" class="btn btn-default" id="btnNextPost">下一筆</a>
                         <a href="#" class="btn btn-default" id="btnNextPage">取得另外十筆</a>
@@ -151,8 +151,33 @@
                     success: function (data) {
                         currentResult = data.results;
                         workingIndex = 0;
-                        //console.info(data);
+                        console.info(data);
                         getNextPost();
+                    }
+                });
+            }
+
+            function saveCurrentPost() {
+                var toSave = {
+                    location_default: [
+                        {
+                            lon: Number.parseFloat($('#longtitude').val()),
+                            lat: Number.parseFloat($('#latitude').val())
+                        }
+                    ]
+                };
+                $.ajax({
+                    url: 'http://ushahidi.olc.tw/api/api/v3/posts/' + currentResult[workingIndex].id,
+                    type: 'PUT',
+                    data: JSON.stringify({
+                        values: toSave
+                    }),
+                    headers: {
+                        Authorization: 'Bearer ' + token
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        currentResult[workingIndex].values = toSave;
                     }
                 });
             }
@@ -228,9 +253,13 @@
                     getNextPost();
                     return false;
                 });
-                $('#btnNextPage').click(function() {
+                $('#btnNextPage').click(function () {
                     offset += 10;
                     getNextPage();
+                    return false;
+                });
+                $('#btnSavePost').click(function () {
+                    saveCurrentPost();
                     return false;
                 });
             })
