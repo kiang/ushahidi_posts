@@ -124,6 +124,11 @@
             var relatedId = 0;
             var workingIndex = 0;
             var map;
+            var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            var labelIndex = 0;
+            var labelListIndex = 0;
+            var infowindow;
+
 
             // Sets the map on all markers in the array.
             function setMapOnAll(map) {
@@ -225,6 +230,7 @@
 
             function getNextPost() {
                 clearMarkers();
+                labelIndex = labelListIndex = 0;
                 var elementLat = $('#latitude');
                 var elementLng = $('#longtitude');
                 $('#postTitle').html(currentResult[workingIndex].title);
@@ -269,10 +275,13 @@
                     dataType: 'json',
                     success: function (data) {
                         var listHtml = '';
+                        infowindow = new google.maps.InfoWindow({
+                            content: ''
+                        });
                         if (data.count > 1) {
                             $.each(data.results, function () {
                                 if (currentResult[workingIndex].id != this.id) {
-                                    listHtml += '<div class="list-group-item">' +
+                                    listHtml += '<div class="list-group-item">' + labels[labelListIndex++ % labels.length] + 
                                             '<h4 class="list-group-item-heading">' + this.title + '</h4>' +
                                             '<p class="list-group-item-text">' + this.content + '</p>';
                                     if (relatedId == this.id) {
@@ -282,6 +291,16 @@
                                     }
                                     listHtml += '<div class="clearfix"></div>' +
                                             '</div>';
+                                    var marker = new google.maps.Marker({
+                                        position: {lat: this.values.location_default[0].lat, lng: this.values.location_default[0].lon},
+                                        label: labels[labelIndex++ % labels.length],
+                                        map: map
+                                    });
+                                    marker.info = this.title;
+                                    marker.addListener('click', function () {
+                                        infowindow.setContent(this.info);
+                                        infowindow.open(map, this);
+                                    });
                                 }
                             });
                         }
