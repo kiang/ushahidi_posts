@@ -191,8 +191,12 @@
             function saveCurrentPost() {
                 $("#loading").fadeIn();
                 relatedId = parseInt(relatedId);
+                var relatedArray = [];
+                if (relatedId > 0) {
+                    var relatedArray = [relatedId];
+                }
                 var toSave = {
-                    'related-post': [relatedId],
+                    'related-post': relatedArray,
                     location_default: [
                         {
                             lon: Number.parseFloat($('#longtitude').val()),
