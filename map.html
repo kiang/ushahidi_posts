@@ -104,7 +104,7 @@
                             </div>
                         </div>
                         <div class="btn-group chg_btns btn-group-justified">
-                            <a href="#" class="btn btn-primary">儲存</a>
+                            <a href="#" class="btn btn-primary" id="btnSavePost">儲存</a>
                             <a href="#" class="btn btn-default" id="btnPreviousPost">上一筆</a>
                             <a href="#" class="btn btn-default" id="btnNextPost">下一筆</a>
                             <a href="#" class="btn btn-default" id="btnNextPage">另外十筆</a>
@@ -195,6 +195,7 @@
             }
 
             function saveCurrentPost() {
+                $("#loading").fadeIn();
                 var toSave = {
                     location_default: [
                         {
@@ -215,6 +216,9 @@
                     dataType: 'json',
                     success: function (data) {
                         currentResult[workingIndex].values = toSave;
+                    },
+                    complete: function () {
+                        $("#loading").fadeOut();
                     }
                 });
             }
@@ -309,16 +313,18 @@
                     workingIndex += 1;
                     if (workingIndex > maxIndex) {
                         workingIndex = maxIndex;
+                    } else {
+                        getNextPost();
                     }
-                    getNextPost();
                     return false;
                 });
                 $('#btnPreviousPost').click(function () {
                     workingIndex -= 1;
                     if (workingIndex < 0) {
                         workingIndex = 0;
+                    } else {
+                        getNextPost();
                     }
-                    getNextPost();
                     return false;
                 });
                 $('#btnNextPage').click(function () {
