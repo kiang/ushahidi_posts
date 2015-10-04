@@ -384,6 +384,7 @@
                     workingIndex += 1;
                     if (workingIndex > maxIndex) {
                         workingIndex = maxIndex;
+                        $('#btnNextPage').trigger('click');
                     } else {
                         getNextPost();
                     }
