@@ -401,7 +401,8 @@
                     workingIndex += 1;
                     if (workingIndex > maxIndex) {
                         workingIndex = maxIndex;
-                        $('#btnNextPage').trigger('click');
+                        offset += 10;
+                        getNextPage();
                     } else {
                         getNextPost();
                     }
@@ -411,6 +412,12 @@
                     workingIndex -= 1;
                     if (workingIndex < 0) {
                         workingIndex = 0;
+                        offset -= 10;
+                        if (offset >= 0) {
+                            getNextPage();
+                        } else {
+                            offset = 0;
+                        }
                     } else {
                         getNextPost();
                     }
