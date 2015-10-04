@@ -156,6 +156,14 @@
         <script src="https://maps.googleapis.com/maps/api/js?callback=initMap"
         async defer></script>
         <script>
+            /*
+             * just modify the apiConfigs to meet your deployment
+             */
+            var apiConfigs = {
+                uri: 'http://ushahidi.olc.tw/api',
+                client_id: 'ushahidiui',
+                client_secret: '35e7f0bca957836d05ca0492211b0ac707671261'
+            };
             var markers = [];
             var token = '';
             var offset = 0;
@@ -195,10 +203,10 @@
                     geocodeAddress(geocoder, map);
                 });
 
-                $.post('http://ushahidi.olc.tw/api/oauth/token', {
+                $.post(apiConfigs.uri + '/oauth/token', {
                     grant_type: 'client_credentials',
-                    client_id: 'ushahidiui',
-                    client_secret: '35e7f0bca957836d05ca0492211b0ac707671261',
+                    client_id: apiConfigs.client_id,
+                    client_secret: apiConfigs.client_secret,
                     scope: 'posts api'
                 }, function (d) {
                     if (d.access_token) {
@@ -213,7 +221,7 @@
             function getNextPage() {
                 $("#loading").fadeIn();
                 $.ajax({
-                    url: 'http://ushahidi.olc.tw/api/api/v3/posts?orderby=created&order=desc&limit=10&offset=' + offset,
+                    url: apiConfigs.uri + '/api/v3/posts?orderby=created&order=desc&limit=10&offset=' + offset,
                     type: 'get',
                     data: {},
                     headers: {
@@ -249,7 +257,7 @@
                     ]
                 };
                 $.ajax({
-                    url: 'http://ushahidi.olc.tw/api/api/v3/posts/' + currentResult[workingIndex].id,
+                    url: apiConfigs.uri + '/api/v3/posts/' + currentResult[workingIndex].id,
                     type: 'PUT',
                     data: JSON.stringify({
                         values: toSave
@@ -305,7 +313,7 @@
                 var bounds = map.getBounds();
                 var bbox = [bounds.getSouthWest().lng(), bounds.getNorthEast().lat(), bounds.getNorthEast().lng(), bounds.getSouthWest().lat()];
                 $.ajax({
-                    url: 'http://ushahidi.olc.tw/api/api/v3/posts?orderby=created&order=desc&limit=10&bbox=' + bbox.join(','),
+                    url: apiConfigs.uri + '/api/v3/posts?orderby=created&order=desc&limit=10&bbox=' + bbox.join(','),
                     type: 'get',
                     data: {},
                     headers: {
