@@ -430,6 +430,7 @@
                 });
                 $('#btnSavePost').click(function () {
                     saveCurrentPost();
+                    $('#btnNextPost').trigger('click');
                     return false;
                 });
             })
