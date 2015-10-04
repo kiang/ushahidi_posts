@@ -167,6 +167,8 @@
             var labelIndex = 0;
             var labelListIndex = 0;
             var infowindow;
+            var totalCount = 0;
+            var totalCountFetched = false;
 
 
             // Sets the map on all markers in the array.
@@ -221,9 +223,17 @@
                     },
                     dataType: 'json',
                     success: function (data) {
+                        if (false === totalCountFetched) {
+                            totalCountFetched = true;
+                            totalCount = data.total_count;
+                            /*
+                             * calculate a random offset
+                             */
+                            offset = Math.round(Math.floor(totalCount / 10) * Math.random()) * 10;
+                            getNextPage();
+                        }
                         currentResult = data.results;
                         workingIndex = 0;
-                        //console.info(data);
                         getNextPost();
                     },
                     complete: function () {
@@ -417,7 +427,7 @@
                     return false;
                 });
                 $('#btnNextPage').click(function () {
-                    offset += 10;
+                    offset = Math.round(Math.floor(totalCount / 10) * Math.random()) * 10;
                     getNextPage();
                     return false;
                 });
