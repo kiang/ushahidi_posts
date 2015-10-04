@@ -100,10 +100,10 @@
                 </div><!-- col-md-8 -->
                 <div class="col-md-4 col-sm-4">
                     <div class="input-group" style="margin-bottom:15px;">
-                      <input type="text" class="form-control" placeholder="Search Place..">
-                      <span class="input-group-btn">
-                        <a id="submit" role="button" value="" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span></a>
-                      </span>
+                        <input type="text" class="form-control" placeholder="Search Place..">
+                        <span class="input-group-btn">
+                            <a id="submit" role="button" value="" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span></a>
+                        </span>
                     </div><!-- /input-group -->
                     <!-- <form class="form-inline">
                         <div class="form-group">
@@ -142,6 +142,15 @@
                 </div><!-- col-md-4 -->
             </div><!-- row -->
         </div><!-- container -->
+        <footer class="footer">
+            <div class="container" style="text-align: center;">
+                <a href="https://docs.google.com/presentation/d/1McldFdpvMFwAyO4PSYyEd7V_5kzorG-J31CGu9Y68sM" target="_blank">slides</a>
+                &nbsp; | &nbsp; <a href="https://github.com/kiang/ushahidi_posts" target="_blank">repository</a>
+                &nbsp; | &nbsp; <a href="http://ushahidi.olc.tw/views/map" target="_blank">deployment</a>
+                &nbsp; | &nbsp; <a href="http://www.ushahidi.com/" target="_blank">ushahidi</a>
+                &nbsp; | &nbsp; MIT licensed
+            </div>
+        </footer>
 
         <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
         <script src="https://maps.googleapis.com/maps/api/js?callback=initMap"
@@ -311,7 +320,7 @@
                         if (data.count > 1) {
                             $.each(data.results, function () {
                                 if (currentResult[workingIndex].id != this.id) {
-                                    listHtml += '<div class="list-group-item"><span class="data_no">' + labels[labelListIndex++ % labels.length] + 
+                                    listHtml += '<div class="list-group-item"><span class="data_no">' + labels[labelListIndex++ % labels.length] +
                                             '</span><h4 class="list-group-item-heading">' + this.title + '</h4>' +
                                             '<p class="list-group-item-text">' + this.content + '</p>';
                                     if (relatedId == this.id) {
