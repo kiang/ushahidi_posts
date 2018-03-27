@@ -144,7 +144,7 @@
         </footer>
 
         <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
-        <script src="https://maps.googleapis.com/maps/api/js?callback=initMap"
+        <script src="https://maps.googleapis.com/maps/api/js?callback=initMap&key=AIzaSyAryGtbWg7sjO30ugSqtW6rGwN4eEwi4DM"
         async defer></script>
         <script>
             /*
@@ -339,17 +339,19 @@
                                     }
                                     listHtml += '<div class="clearfix"></div>' +
                                             '</div>';
-                                    var marker = new google.maps.Marker({
-                                        position: {lat: this.values.location_default[0].lat, lng: this.values.location_default[0].lon},
-                                        label: labels[labelIndex++ % labels.length],
-                                        map: map
-                                    });
-                                    marker.info = this.title;
-                                    marker.addListener('click', function () {
-                                        infowindow.setContent(this.info);
-                                        infowindow.open(map, this);
-                                    });
-                                    markers.push(marker);
+                                    if(this.values.location_default) {
+                                      var marker = new google.maps.Marker({
+                                          position: {lat: this.values.location_default[0].lat, lng: this.values.location_default[0].lon},
+                                          label: labels[labelIndex++ % labels.length],
+                                          map: map
+                                      });
+                                      marker.info = this.title;
+                                      marker.addListener('click', function () {
+                                          infowindow.setContent(this.info);
+                                          infowindow.open(map, this);
+                                      });
+                                      markers.push(marker);
+                                    }
                                 }
                             });
                         }
